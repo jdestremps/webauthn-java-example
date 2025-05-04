@@ -34,8 +34,10 @@ document.addEventListener("submit", (e) => {
         clientExtensionResults: publicKeyCredential.getClientExtensionResults(),
     }))
     .then((encodedResult) => {
+        console.log("encodedResult: ", JSON.stringify(encodedResult));
         const form = document.getElementById("form");
         const formData = new FormData(form);
+        console.log("formData: ", formData);
         formData.append("credential", JSON.stringify(encodedResult));
         return fetch("/finishauth", {
             method: 'POST',

@@ -19,7 +19,7 @@ public class AppApplication {
 
 	@Bean
 	@Autowired
-	public RelyingParty relyingParty(RegistrationService regisrationRepository, WebAuthProperties properties) {
+	public RelyingParty relyingParty(RegistrationService registrationRepository, WebAuthProperties properties) {
 		RelyingPartyIdentity rpIdentity = RelyingPartyIdentity.builder()
 			.id(properties.getHostName())
 			.name(properties.getDisplay())
@@ -27,7 +27,7 @@ public class AppApplication {
 
 		return RelyingParty.builder()
 			.identity(rpIdentity)
-			.credentialRepository(regisrationRepository)
+			.credentialRepository(registrationRepository)
 			.origins(properties.getOrigin())
 			.build();
 	}

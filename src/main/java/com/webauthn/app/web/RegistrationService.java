@@ -22,10 +22,14 @@ import lombok.Getter;
 @Repository
 @Getter
 public class RegistrationService implements CredentialRepository  {
-    @Autowired
-    private UserRepository userRepo;
-    @Autowired
-    private AuthenticatorRepository authRepository;
+
+    private final UserRepository userRepo;
+    private final AuthenticatorRepository authRepository;
+
+    public RegistrationService(UserRepository userRepo, AuthenticatorRepository authRepository) {
+        this.userRepo = userRepo;
+        this.authRepository = authRepository;
+    }
 
     @Override
     public Set<PublicKeyCredentialDescriptor> getCredentialIdsForUsername(String username) {
@@ -35,7 +39,7 @@ public class RegistrationService implements CredentialRepository  {
         .map(
             credential ->
                 PublicKeyCredentialDescriptor.builder()
-                    .id(credential.getCredentialId())
+                    .id(new ByteArray(credential.getCredentialId()))
                     .build())
         .collect(Collectors.toSet());
     }
@@ -43,24 +47,24 @@ public class RegistrationService implements CredentialRepository  {
     @Override
     public Optional<ByteArray> getUserHandleForUsername(String username) {
         AppUser user = userRepo.findByUsername(username);
-        return Optional.of(user.getHandle());
+        return Optional.of(new ByteArray(user.getHandle()));
     }
 
     @Override
     public Optional<String> getUsernameForUserHandle(ByteArray userHandle) {
-        AppUser user = userRepo.findByHandle(userHandle);
+        AppUser user = userRepo.findByHandle(userHandle.getBytes());
         return Optional.of(user.getUsername());
     }
 
     @Override
     public Optional<RegisteredCredential> lookup(ByteArray credentialId, ByteArray userHandle) {
-        Optional<Authenticator> auth = authRepository.findByCredentialId(credentialId);
+        Optional<Authenticator> auth = authRepository.findByCredentialId(credentialId.getBytes());
         return auth.map(
             credential ->
                 RegisteredCredential.builder()
-                    .credentialId(credential.getCredentialId())
-                    .userHandle(credential.getUser().getHandle())
-                    .publicKeyCose(credential.getPublicKey())
+                    .credentialId(new ByteArray(credential.getCredentialId()))
+                    .userHandle(new ByteArray(credential.getUser().getHandle()))
+                    .publicKeyCose(new ByteArray(credential.getPublicKey()))
                     .signatureCount(credential.getCount())
                     .build()
         );
@@ -68,14 +72,14 @@ public class RegistrationService implements CredentialRepository  {
 
     @Override
     public Set<RegisteredCredential> lookupAll(ByteArray credentialId) {
-        List<Authenticator> auth = authRepository.findAllByCredentialId(credentialId);
+        List<Authenticator> auth = authRepository.findAllByCredentialId(credentialId.getBytes());
         return auth.stream()
         .map(
             credential ->
                 RegisteredCredential.builder()
-                    .credentialId(credential.getCredentialId())
-                    .userHandle(credential.getUser().getHandle())
-                    .publicKeyCose(credential.getPublicKey())
+                    .credentialId(new ByteArray(credential.getCredentialId()))
+                    .userHandle(new ByteArray(credential.getUser().getHandle()))
+                    .publicKeyCose(new ByteArray(credential.getPublicKey()))
                     .signatureCount(credential.getCount())
                     .build())
         .collect(Collectors.toSet());

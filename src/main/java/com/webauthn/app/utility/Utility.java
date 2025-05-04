@@ -15,4 +15,8 @@ public class Utility {
 		random.nextBytes(bytes);
 		return new ByteArray(bytes);
 	}
+
+	public static void log(String message) {
+		System.out.println(message);
+	}
 }

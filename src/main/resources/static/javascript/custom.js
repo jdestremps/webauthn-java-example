@@ -32,6 +32,7 @@ function initialCheckStatus(response) {
     return response.json();
 }
 function followRedirect(response) {
+    console.log("response: ", response);
     if (response.status == 200) {
         window.location.href = response.url;
     } else {
@@ -39,6 +40,7 @@ function followRedirect(response) {
     }
 }
 function displayError(error) {
+    console.log('Error: ', error);
     const errorElem = document.getElementById('errors');
     errorElem.innerHTML = error;
     console.error(error);

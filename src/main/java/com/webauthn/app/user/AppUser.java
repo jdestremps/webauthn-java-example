@@ -29,10 +29,10 @@ public class AppUser {
 
     @Lob
     @Column(nullable = false, length = 64)
-    private ByteArray handle;
+    private byte[] handle;
 
     public AppUser(UserIdentity user) {
-        this.handle = user.getId();
+        this.handle = user.getId().getBytes();
         this.username = user.getName();
         this.displayName = user.getDisplayName();
     }
@@ -41,7 +41,7 @@ public class AppUser {
         return UserIdentity.builder()
             .name(getUsername())
             .displayName(getDisplayName())
-            .id(getHandle())
+            .id(new ByteArray(getHandle()))
             .build();
     }
 }
