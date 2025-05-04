@@ -1,5 +1,9 @@
 # Java Spring Boot Implementation of WebAuthn
 
+NOTE: This is my personal fork of the original found here: https://github.com/oktadev/webauthn-java-example
+I made a fork because the original code was not working 100%.  There was one clear error in how the session value was saved (the original code used the userName to save it and the displayName to retrieve it.)  Also, it seemed like JPA did not like the Yubico ByteArray as a datatype for the H2 in memory DB, so I changed it to byte[] and then I do conversions throughout the code to make the Yubico library happy.  Feel free to download and use whatever you want.  No license.  Free code although I suppose it should follow the orginal license from where I got it at the link above.
+---------------
+
 This example app demonstrates how WebAuthn works using Spring Boot.
 
 Please read [Building a WebAuthn Application with Java][blog-post] to see how this app was created.
